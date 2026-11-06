@@ -1,0 +1,184 @@
+{
+  "entities": {
+    "Client": {
+      "title": "Client Profile",
+      "description": "A student profile registered at the studio",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "age": { "type": "string" },
+        "gender": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "assigned_coach_id": { "type": "string" },
+        "status": { "type": "string" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["id", "name", "email"]
+    },
+    "Assessment": {
+      "title": "Client Assessment",
+      "description": "Baseline fitness assessment parameters",
+      "type": "object",
+      "properties": {
+        "client_id": { "type": "string" },
+        "experience": { "type": "string" },
+        "goal": { "type": "string" },
+        "days_per_week": { "type": "number" },
+        "injuries": { "type": "array" },
+        "running_5k": { "type": "string" },
+        "running_2k": { "type": "string" },
+        "run_rating": { "type": "number" },
+        "run_frequency": { "type": "string" }
+      },
+      "required": ["client_id"]
+    },
+    "Session": {
+      "title": "PT Session",
+      "description": "Scheduled training slots/sessions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "coach_id": { "type": "string" },
+        "client_id": { "type": "string" },
+        "type": { "type": "string" },
+        "scheduled_at": { "type": "string" },
+        "duration_min": { "type": "number" },
+        "status": { "type": "string" },
+        "reason": { "type": "string" }
+      },
+      "required": ["id", "coach_id", "client_id", "status"]
+    },
+    "Invite": {
+      "title": "Session Invite",
+      "description": "Pending training booking invite request",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "client_id": { "type": "string" },
+        "coach_id": { "type": "string" },
+        "requested_slot": { "type": "string" },
+        "status": { "type": "string" },
+        "reason": { "type": "string" }
+      },
+      "required": ["id", "client_id", "coach_id", "status"]
+    },
+    "Rating": {
+      "title": "Session Rating",
+      "description": "Feedback and score provided by client on a session",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "client_id": { "type": "string" },
+        "clientName": { "type": "string" },
+        "coachId": { "type": "string" },
+        "coachName": { "type": "string" },
+        "session_date": { "type": "string" },
+        "overall": { "type": "number" },
+        "comment": { "type": "string" }
+      },
+      "required": ["id", "client_id", "coachId"]
+    },
+    "Chat": {
+      "title": "Chat Message",
+      "description": "Interactions between studio client and coaches",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "client_id": { "type": "string" },
+        "coach_id": { "type": "string" },
+        "sender": { "type": "string" },
+        "text": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "client_id", "coach_id", "sender", "text"]
+    },
+    "NutritionPlan": {
+      "title": "Nutrition Plan",
+      "description": "Macro dietary targets and coach comments",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "client_id": { "type": "string" },
+        "coach_id": { "type": "string" },
+        "period": { "type": "string" },
+        "calories": { "type": "number" },
+        "protein": { "type": "number" },
+        "carbs": { "type": "number" },
+        "fat": { "type": "number" },
+        "notes": { "type": "string" },
+        "tags": { "type": "array" }
+      },
+      "required": ["client_id", "calories", "protein", "carbs", "fat"]
+    },
+    "SessionNote": {
+      "title": "Session Note",
+      "description": "Technique feedback block elements posted by coach",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "client_id": { "type": "string" },
+        "coach_id": { "type": "string" },
+        "date": { "type": "string" },
+        "text": { "type": "string" },
+        "tags": { "type": "array" },
+        "type": { "type": "string" }
+      },
+      "required": ["id", "client_id", "coach_id", "text"]
+    },
+    "Transaction": {
+      "title": "Business Transaction",
+      "description": "Financial ledger record of client spendings, upgrades, invoices",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "name": { "type": "string" },
+        "upgrade": { "type": "string" },
+        "amountPaid": { "type": "number" },
+        "status": { "type": "string", "enum": ["Paid", "Pending", "Cancelled"] },
+        "method": { "type": "string" }
+      },
+      "required": ["id", "date", "name", "amountPaid", "status"]
+    }
+  },
+  "firestore": {
+    "clients/{clientId}": {
+      "schema": "Client",
+      "description": "Direct student profile records"
+    },
+    "assessments/{clientId}": {
+      "schema": "Assessment",
+      "description": "Baseline assessment variables mapped by clientId"
+    },
+    "sessions/{sessionId}": {
+      "schema": "Session",
+      "description": "Scheduled or blocked personal training session tracks"
+    },
+    "invites/{inviteId}": {
+      "schema": "Invite",
+      "description": "Checklist status for pending booking slots"
+    },
+    "ratings/{ratingId}": {
+      "schema": "Rating",
+      "description": "Scores and ratings parsed from historical workouts"
+    },
+    "chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Secure messages logs synchronized with live panels"
+    },
+    "nutrition_plans/{clientId}": {
+      "schema": "NutritionPlan",
+      "description": "Macro nutrition guidelines mapped by clientId"
+    },
+    "session_notes/{noteId}": {
+      "schema": "SessionNote",
+      "description": "Coaching tips feed chronologically"
+    },
+    "transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Ledger transactions of upgrades and payments"
+    }
+  }
+}
